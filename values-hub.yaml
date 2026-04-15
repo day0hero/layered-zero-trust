@@ -21,10 +21,10 @@ clusterGroup:
     - vault
     - qtodo
     - golang-external-secrets:
-      disabled: true
+        disabled: true
     - external-secrets-operator:
-      operatorGroup: true
-      targetNamespaces: []
+        operatorGroup: true
+        targetNamespaces: []
     - external-secrets:
     - keycloak-system:
         operatorGroup: true
