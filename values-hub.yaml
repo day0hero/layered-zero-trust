@@ -18,7 +18,6 @@ clusterGroup:
     - open-cluster-management
     - vault
     - qtodo
-    - golang-external-secrets
     - keycloak-system:
         operatorGroup: true
         targetNamespace: keycloak-system
