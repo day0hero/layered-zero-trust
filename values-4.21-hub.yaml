@@ -7,9 +7,7 @@ clusterGroup:
     external-secrets-operator:
       operatorGroup: true
       targetNamespaces: []
-    # Empty map required: bare `external-secrets:` parses as null and breaks
-    # clustergroup/templates/core/operatorgroup.yaml ($v.disabled nil pointer).
-    external-secrets: {}
+    external-secrets:
   subscriptions:
     eso:
       name: openshift-external-secrets-operator
