@@ -15,16 +15,16 @@ clusterGroup:
   name: hub
   isHubCluster: true
   namespaces:
-    - open-cluster-management: {}
-    - vault: {}
-    - qtodo: {}
-    - keycloak-system:
-        operatorGroup: true
-        targetNamespace: keycloak-system
-    - cert-manager: {}
-    - cert-manager-operator:
-        operatorGroup: true
-        targetNamespace: cert-manager-operator
+    open-cluster-management:
+    vault:
+    qtodo:
+    keycloak-system:
+      operatorGroup: true
+      targetNamespace: keycloak-system
+    cert-manager:
+    cert-manager-operator:
+      operatorGroup: true
+      targetNamespace: cert-manager-operator
     # Layer 1: Storage and Registry
     # Required for RHTPA and QUAY (provides NooBaa object storage backend)
     # - openshift-storage:
@@ -55,22 +55,22 @@ clusterGroup:
     #       argocd.argoproj.io/sync-wave: "32"  # Create before RHTPA components
     #     labels:
     #       openshift.io/cluster-monitoring: "true"
-    - zero-trust-workload-identity-manager:
-        operatorGroup: true
-        targetNamespace: zero-trust-workload-identity-manager
-    - openshift-compliance:
-        operatorGroup: true
-        targetNamespace: openshift-compliance
-        annotations:
-          openshift.io/cluster-monitoring: "true"
+    zero-trust-workload-identity-manager:
+      operatorGroup: true
+      targetNamespace: zero-trust-workload-identity-manager
+    openshift-compliance:
+      operatorGroup: true
+      targetNamespace: openshift-compliance
+      annotations:
+        openshift.io/cluster-monitoring: "true"
     # Secure Supply Chain: Uncomment to enable OpenShift Pipelines
     # - openshift-pipelines
     #
     # Red Hat Advanced Cluster Security (RHACS/StackRox) - Uncomment to enable
-    - stackrox:
-        operatorGroup: true
-        labels:
-          openshift.io/cluster-monitoring: "true"
+    stackrox:
+      operatorGroup: true
+      labels:
+        openshift.io/cluster-monitoring: "true"
   subscriptions:
     acm:
       name: advanced-cluster-management
