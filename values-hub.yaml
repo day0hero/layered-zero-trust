@@ -2,8 +2,6 @@
 # This is the default configuration with optional Layer 1 components (Quay, RHTAS) commented out
 # To deploy with optional components, uncomment the relevant sections below
 
-esoversion: "external-secrets.io/v1"
-
 # This spire config is required to fix a bug in the zero-trust-workload-identity-manager operator
 spire:
   oidcDiscoveryProvider:
@@ -20,12 +18,7 @@ clusterGroup:
     - open-cluster-management
     - vault
     - qtodo
-    - golang-external-secrets:
-        disabled: true
-    - external-secrets-operator:
-        operatorGroup: true
-        targetNamespaces: []
-    - external-secrets:
+    - golang-external-secrets
     - keycloak-system:
         operatorGroup: true
         targetNamespace: keycloak-system
@@ -85,10 +78,6 @@ clusterGroup:
       namespace: open-cluster-management
       channel: release-2.15
       catalogSource: redhat-operators
-    eso:
-      name: openshift-external-secrets-operator
-      namespace: external-secrets-operator
-      channel: stable-v1
     cert-manager:
       name: openshift-cert-manager-operator
       namespace: cert-manager-operator
@@ -181,14 +170,6 @@ clusterGroup:
   #   - '/overrides/values-{{ $.Values.global.hubClusterDomain }}.yaml'
   #   - '/overrides/values-{{ $.Values.global.localClusterDomain }}.yaml'
   applications:
-    golang-external-secrets:
-      disabled: true
-    openshift-external-secrets:
-      name: openshift-external-secrets
-      namespace: external-secrets
-      argoProject: hub
-      chart: openshift-external-secrets
-      chartVersion: 0.0.*
     ztvp-certificates:
       name: ztvp-certificates
       namespace: openshift-config
