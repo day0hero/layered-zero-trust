@@ -15,13 +15,13 @@ clusterGroup:
   name: hub
   isHubCluster: true
   namespaces:
-    - open-cluster-management
-    - vault
-    - qtodo
+    - open-cluster-management:
+    - vault:
+    - qtodo:
     - keycloak-system:
         operatorGroup: true
         targetNamespace: keycloak-system
-    - cert-manager
+    - cert-manager:
     - cert-manager-operator:
         operatorGroup: true
         targetNamespace: cert-manager-operator
@@ -146,7 +146,7 @@ clusterGroup:
     #   catalogSource: redhat-operators
     #   annotations:
     #     argocd.argoproj.io/sync-wave: "27"  # Install after OperatorGroup (26), before applications
-  projects:
+  argoProjects:
     - hub
   # Explicitly mention the cluster-state based overrides we plan to use for this pattern.
   # We can use self-referential variables because the chart calls the tpl function with these variables defined
@@ -174,7 +174,7 @@ clusterGroup:
     ztvp-certificates:
       name: ztvp-certificates
       namespace: openshift-config
-      project: hub
+      argoProject: hub
       path: charts/ztvp-certificates
       annotations:
         argocd.argoproj.io/sync-wave: "21"
@@ -230,9 +230,9 @@ clusterGroup:
     acm:
       name: acm
       namespace: open-cluster-management
-      project: hub
+      argoProject: hub
       chart: acm
-      chartVersion: 0.1.*
+      chartVersion: 0.2.*
       annotations:
         argocd.argoproj.io/sync-wave: "5"
       ignoreDifferences:
@@ -246,7 +246,7 @@ clusterGroup:
           value: none
     acm-managed-clusters:
       name: acm-managed-clusters
-      project: hub
+      argoProject: hub
       path: charts/acm-managed-clusters
       annotations:
         argocd.argoproj.io/sync-wave: "10"
@@ -261,7 +261,7 @@ clusterGroup:
       namespace: openshift-compliance
       annotations:
         argocd.argoproj.io/sync-wave: '1'
-      project: hub
+      argoProject: hub
       chart: ocp-compliance-scanning
       chartVersion: 0.0.*
       overrides:
@@ -273,7 +273,7 @@ clusterGroup:
     vault:
       name: vault
       namespace: vault
-      project: hub
+      argoProject: hub
       chart: hashicorp-vault
       chartVersion: 0.1.*
       annotations:
@@ -431,15 +431,15 @@ clusterGroup:
     golang-external-secrets:
       name: golang-external-secrets
       namespace: golang-external-secrets
-      project: hub
+      argoProject: hub
       chart: golang-external-secrets
-      chartVersion: 0.1.*
+      chartVersion: 0.2.*
       annotations:
         argocd.argoproj.io/sync-wave: "30"
     rh-keycloak:
       name: rh-keycloak
       namespace: keycloak-system
-      project: hub
+      argoProject: hub
       chart: rhbk
       chartVersion: 0.0.*
       annotations:
@@ -454,7 +454,7 @@ clusterGroup:
     rh-cert-manager:
       name: rh-cert-manager
       namespace: cert-manager-operator
-      project: hub
+      argoProject: hub
       chart: ocp-certmanager
       chartVersion: 0.2.*
       annotations:
@@ -462,7 +462,7 @@ clusterGroup:
     zero-trust-workload-identity-manager:
       name: zero-trust-workload-identity-manager
       namespace: zero-trust-workload-identity-manager
-      project: hub
+      argoProject: hub
       chart: ztwim
       chartVersion: 0.1.*
       annotations:
@@ -473,7 +473,7 @@ clusterGroup:
     qtodo:
       name: qtodo
       namespace: qtodo
-      project: hub
+      argoProject: hub
       path: charts/qtodo
       annotations:
         argocd.argoproj.io/sync-wave: "38"
@@ -532,7 +532,7 @@ clusterGroup:
     acs-central:
       name: acs-central-services
       namespace: stackrox
-      project: hub
+      argoProject: hub
       path: charts/acs-central
       overrides:
     # Uncomment and set if you need a specific StorageClass:
@@ -566,7 +566,7 @@ clusterGroup:
     acs-secured-cluster:
       name: acs-secured-cluster
       namespace: stackrox
-      project: hub
+      argoProject: hub
       path: charts/acs-secured-cluster
       overrides:
         - name: clusterName
@@ -580,7 +580,7 @@ clusterGroup:
     acs-policies:
       name: acs-policies
       namespace: stackrox
-      project: hub
+      argoProject: hub
       path: charts/acs-policies
       annotations:
         argocd.argoproj.io/sync-wave: "51"
