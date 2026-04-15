@@ -2,12 +2,12 @@ esoversion: "external-secrets.io/v1"
 
 clusterGroup:
   namespaces:
-    golang-external-secrets:
-      disabled: true
-    external-secrets-operator:
-      operatorGroup: true
-      targetNamespaces: []
-    external-secrets:
+    - golang-external-secrets:
+        disabled: true
+    - external-secrets-operator:
+        operatorGroup: true
+        targetNamespaces: []
+    - external-secrets:
   subscriptions:
     eso:
       name: openshift-external-secrets-operator
