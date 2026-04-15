@@ -15,13 +15,13 @@ clusterGroup:
   name: hub
   isHubCluster: true
   namespaces:
-    - open-cluster-management:
-    - vault:
-    - qtodo:
+    - open-cluster-management: {}
+    - vault: {}
+    - qtodo: {}
     - keycloak-system:
         operatorGroup: true
         targetNamespace: keycloak-system
-    - cert-manager:
+    - cert-manager: {}
     - cert-manager-operator:
         operatorGroup: true
         targetNamespace: cert-manager-operator
