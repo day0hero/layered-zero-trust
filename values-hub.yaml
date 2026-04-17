@@ -178,12 +178,6 @@ clusterGroup:
   #   - '/overrides/values-{{ $.Values.global.hubClusterDomain }}.yaml'
   #   - '/overrides/values-{{ $.Values.global.localClusterDomain }}.yaml'
   applications:
-    openshift-external-secrets:
-      name: openshift-external-secrets
-      namespace: external-secrets
-      argoProject: hub
-      chart: openshift-external-secrets
-      chartVersion: 0.0.*
     ztvp-certificates:
       name: ztvp-certificates
       namespace: openshift-config
@@ -441,12 +435,12 @@ clusterGroup:
     #     #   value: "false"
     #     # - name: rhtpa.modules.createImporters.importers.redhat-sboms.sbom.disabled
     #     #   value: "false"
-    golang-external-secrets:
-      name: golang-external-secrets
-      namespace: golang-external-secrets
+    openshift-external-secrets:
+      name: openshift-external-secrets
+      namespace: external-secrets
       argoProject: hub
-      chart: golang-external-secrets
-      chartVersion: 0.1.*
+      chart: openshift-external-secrets
+      chartVersion: 0.0.*
       annotations:
         argocd.argoproj.io/sync-wave: "30"
     rh-keycloak:
