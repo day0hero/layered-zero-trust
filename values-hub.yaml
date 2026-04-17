@@ -15,69 +15,76 @@ clusterGroup:
   name: hub
   isHubCluster: true
   namespaces:
-    - open-cluster-management
-    - vault
-    - qtodo
-    - golang-external-secrets
-    - keycloak-system:
-        operatorGroup: true
-        targetNamespace: keycloak-system
-    - cert-manager
-    - cert-manager-operator:
-        operatorGroup: true
-        targetNamespace: cert-manager-operator
+    open-cluster-management:
+    vault:
+    qtodo:
+    golang-external-secrets:
+      operatorGroup: true
+      targetNamespaces: []
+    external-secrets:
+    keycloak-system:
+      operatorGroup: true
+      targetNamespace: keycloak-system
+    cert-manager:
+    cert-manager-operator:
+      operatorGroup: true
+      targetNamespace: cert-manager-operator
     # Layer 1: Storage and Registry
     # Required for RHTPA and QUAY (provides NooBaa object storage backend)
-    # - openshift-storage:
-    #     operatorGroup: true
-    #     targetNamespace: openshift-storage
-    #     annotations:
-    #       openshift.io/cluster-monitoring: "true"
-    #       argocd.argoproj.io/sync-wave: "26"  # Propagated to OperatorGroup by framework
-    # - quay-enterprise:
-    #     annotations:
-    #       argocd.argoproj.io/sync-wave: "32"  # Create before NooBaa and all Quay components
-    #     labels:
-    #       openshift.io/cluster-monitoring: "true"
+    # openshift-storage:
+    #   operatorGroup: true
+    #   targetNamespace: openshift-storage
+    #   annotations:
+    #     openshift.io/cluster-monitoring: "true"
+    #     argocd.argoproj.io/sync-wave: "26"  # Propagated to OperatorGroup by framework
+    # quay-enterprise:
+    #   annotations:
+    #     argocd.argoproj.io/sync-wave: "32"  # Create before NooBaa and all Quay components
+    #   labels:
+    #     openshift.io/cluster-monitoring: "true"
     # RHTAS namespace (required when RHTAS application is enabled)
     # COMMENTED OUT: Uncomment to enable RHTAS with SPIFFE signing
-    # - trusted-artifact-signer:
-    #     annotations:
-    #       argocd.argoproj.io/sync-wave: "32"  # Auto-created by RHTAS operator
-    #     labels:
-    #       openshift.io/cluster-monitoring: "true"
-    # - rhtpa-operator:
-    #     operatorGroup: true
-    #     targetNamespace: rhtpa-operator
-    #     annotations:
-    #       argocd.argoproj.io/sync-wave: "26"  # Create before operator subscription
-    # - trusted-profile-analyzer:
-    #     annotations:
-    #       argocd.argoproj.io/sync-wave: "32"  # Create before RHTPA components
-    #     labels:
-    #       openshift.io/cluster-monitoring: "true"
-    - zero-trust-workload-identity-manager:
-        operatorGroup: true
-        targetNamespace: zero-trust-workload-identity-manager
-    - openshift-compliance:
-        operatorGroup: true
-        targetNamespace: openshift-compliance
-        annotations:
-          openshift.io/cluster-monitoring: "true"
+    # trusted-artifact-signer:
+    #   annotations:
+    #     argocd.argoproj.io/sync-wave: "32"  # Auto-created by RHTAS operator
+    #   labels:
+    #     openshift.io/cluster-monitoring: "true"
+    # rhtpa-operator:
+    #   operatorGroup: true
+    #   targetNamespace: rhtpa-operator
+    #   annotations:
+    #     argocd.argoproj.io/sync-wave: "26"  # Create before operator subscription
+    # trusted-profile-analyzer:
+    #   annotations:
+    #     argocd.argoproj.io/sync-wave: "32"  # Create before RHTPA components
+    #   labels:
+    #     openshift.io/cluster-monitoring: "true"
+    zero-trust-workload-identity-manager:
+      operatorGroup: true
+      targetNamespace: zero-trust-workload-identity-manager
+    openshift-compliance:
+      operatorGroup: true
+      targetNamespace: openshift-compliance
+      annotations:
+        openshift.io/cluster-monitoring: "true"
     # Secure Supply Chain: Uncomment to enable OpenShift Pipelines
-    # - openshift-pipelines
+    # openshift-pipelines
     #
     # Red Hat Advanced Cluster Security (RHACS/StackRox) - Uncomment to enable
-    - stackrox:
-        operatorGroup: true
-        labels:
-          openshift.io/cluster-monitoring: "true"
+    stackrox:
+      operatorGroup: true
+      labels:
+        openshift.io/cluster-monitoring: "true"
   subscriptions:
     acm:
       name: advanced-cluster-management
       namespace: open-cluster-management
       channel: release-2.15
       catalogSource: redhat-operators
+    eso:
+      name: openshift-external-secrets-operator
+      namespace: external-secrets-operator
+      channel: stable-v1
     cert-manager:
       name: openshift-cert-manager-operator
       namespace: cert-manager-operator
@@ -153,6 +160,7 @@ clusterGroup:
   # We can use self-referential variables because the chart calls the tpl function with these variables defined
   sharedValueFiles:
     - '/overrides/values-{{ $.Values.global.clusterPlatform }}.yaml'
+    - '/overrides/values-{{ $.Values.global.clusterVersion }}-{{ $.Values.clusterGroup.name }}.yaml'
   # sharedValueFiles is a flexible mechanism that will add the listed valuefiles to every app defined in the
   # applications section. We intend this to supplement and possibly even replace previous "magic" mechanisms, though
   # we do not at present have a target date for removal.
@@ -170,6 +178,12 @@ clusterGroup:
   #   - '/overrides/values-{{ $.Values.global.hubClusterDomain }}.yaml'
   #   - '/overrides/values-{{ $.Values.global.localClusterDomain }}.yaml'
   applications:
+    openshift-external-secrets:
+      name: openshift-external-secrets
+      namespace: external-secrets
+      argoProject: hub
+      chart: openshift-external-secrets
+      chartVersion: 0.0.*
     ztvp-certificates:
       name: ztvp-certificates
       namespace: openshift-config
@@ -192,7 +206,7 @@ clusterGroup:
       #   - Additional CA certificates (additionalCertificates array)
       #   - Automatic rollout restart for consuming applications
       extraValueFiles:
-        - /overrides/values-ztvp-certificates.yaml
+        - '/overrides/values-ztvp-certificates.yaml'
         - '/overrides/values-ztvp-certificates-{{ $.Values.global.clusterPlatform }}.yaml'
       overrides:
         # Disable Job TTL to prevent ArgoCD OutOfSync when Kubernetes deletes completed Jobs
@@ -231,7 +245,7 @@ clusterGroup:
       namespace: open-cluster-management
       project: hub
       chart: acm
-      chartVersion: 0.1.*
+      chartVersion: 0.2.*
       annotations:
         argocd.argoproj.io/sync-wave: "5"
       ignoreDifferences:
