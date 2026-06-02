@@ -436,8 +436,9 @@ clusterGroup:
       name: rh-keycloak
       namespace: keycloak-system
       argoProject: hub
-      chart: rhbk
-      chartVersion: 0.0.*
+      path: charts/rhbk
+#      chart: rhbk
+#      chartVersion: 0.0.*
       annotations:
         argocd.argoproj.io/sync-wave: "35"
       # SPIFFE Identity Provider is enabled by default in the chart.
